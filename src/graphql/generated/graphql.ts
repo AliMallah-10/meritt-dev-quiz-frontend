@@ -212,6 +212,13 @@ export enum Sorting {
   Desc = 'DESC'
 }
 
+export type CreateContactusMutationVariables = Exact<{
+  input: ContactUsCreateInput;
+}>;
+
+
+export type CreateContactusMutation = { __typename?: 'Mutation', createContactus: { __typename?: 'SingleContactUs', item?: { __typename?: 'ContactUs', _id: string, full_name: string, phone_number: string, subject: string, body: string } | null, error?: { __typename?: 'FieldError', field: string, message: string } | null } };
+
 export type GetAllContactusQueryVariables = Exact<{
   page: Scalars['PositiveInt']['input'];
   limit: Scalars['PositiveInt']['input'];
@@ -223,7 +230,70 @@ export type GetAllContactusQueryVariables = Exact<{
 
 export type GetAllContactusQuery = { __typename?: 'Query', getAllContactus: { __typename?: 'PaginatedContactUs', length: number, error?: { __typename?: 'FieldError', field: string, message: string } | null, items?: Array<{ __typename?: 'ContactUs', _id: string, createdAt: any, full_name: string, phone_number: string, subject: string, body: string }> | null } };
 
+export type GetAllProductQueryVariables = Exact<{
+  page: Scalars['PositiveInt']['input'];
+  limit: Scalars['PositiveInt']['input'];
+  searchFields: SearchProductFields;
+  sort: SortProductArgs;
+  filters?: InputMaybe<Scalars['ProductFilter']['input']>;
+}>;
 
+
+export type GetAllProductQuery = { __typename?: 'Query', getAllProduct: { __typename?: 'PaginatedProduct', length: number, error?: { __typename?: 'FieldError', field: string, message: string } | null, items?: Array<{
+  updatedAt: any; __typename?: 'Product', _id: string, createdAt: any, title: string, description: string, quantity: number, images: Array<string> 
+}> | null } };
+
+export type GetProductQueryVariables = Exact<{
+  id: Scalars['ObjectID']['input'];
+}>;
+
+
+export type GetProductQuery = { __typename?: 'Query', getProduct: { __typename?: 'SingleProduct', item?: { __typename?: 'Product', _id: string, title: string, description: string, quantity: number, images: Array<string>, createdAt: any } | null, error?: { __typename?: 'FieldError', field: string, message: string } | null } };
+
+
+export const CreateContactusDocument = gql`
+    mutation CreateContactus($input: ContactUsCreateInput!) {
+  createContactus(input: $input) {
+    item {
+      _id
+      full_name
+      phone_number
+      subject
+      body
+    }
+    error {
+      field
+      message
+    }
+  }
+}
+    `;
+export type CreateContactusMutationFn = Apollo.MutationFunction<CreateContactusMutation, CreateContactusMutationVariables>;
+
+/**
+ * __useCreateContactusMutation__
+ *
+ * To run a mutation, you first call `useCreateContactusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateContactusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createContactusMutation, { data, loading, error }] = useCreateContactusMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateContactusMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateContactusMutation, CreateContactusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateContactusMutation, CreateContactusMutationVariables>(CreateContactusDocument, options);
+      }
+export type CreateContactusMutationHookResult = ReturnType<typeof useCreateContactusMutation>;
+export type CreateContactusMutationResult = Apollo.MutationResult<CreateContactusMutation>;
+export type CreateContactusMutationOptions = Apollo.BaseMutationOptions<CreateContactusMutation, CreateContactusMutationVariables>;
 export const GetAllContactusDocument = gql`
     query GetAllContactus($page: PositiveInt!, $limit: PositiveInt!, $searchFields: SearchContactUsFields!, $sort: SortContactUsArgs!, $filters: ContactUsFilter) {
   getAllContactus(
@@ -286,3 +356,116 @@ export type GetAllContactusQueryHookResult = ReturnType<typeof useGetAllContactu
 export type GetAllContactusLazyQueryHookResult = ReturnType<typeof useGetAllContactusLazyQuery>;
 export type GetAllContactusSuspenseQueryHookResult = ReturnType<typeof useGetAllContactusSuspenseQuery>;
 export type GetAllContactusQueryResult = Apollo.QueryResult<GetAllContactusQuery, GetAllContactusQueryVariables>;
+export const GetAllProductDocument = gql`
+    query GetAllProduct($page: PositiveInt!, $limit: PositiveInt!, $searchFields: SearchProductFields!, $sort: SortProductArgs!, $filters: ProductFilter) {
+  getAllProduct(
+    page: $page
+    limit: $limit
+    searchFields: $searchFields
+    sort: $sort
+    filters: $filters
+  ) {
+    error {
+      field
+      message
+    }
+    length
+    items {
+      _id
+      createdAt
+      title
+      description
+      quantity
+      images
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllProductQuery__
+ *
+ * To run a query within a React component, call `useGetAllProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllProductQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      limit: // value for 'limit'
+ *      searchFields: // value for 'searchFields'
+ *      sort: // value for 'sort'
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useGetAllProductQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetAllProductQuery, GetAllProductQueryVariables> & ({ variables: GetAllProductQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllProductQuery, GetAllProductQueryVariables>(GetAllProductDocument, options);
+      }
+export function useGetAllProductLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllProductQuery, GetAllProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllProductQuery, GetAllProductQueryVariables>(GetAllProductDocument, options);
+        }
+export function useGetAllProductSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllProductQuery, GetAllProductQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllProductQuery, GetAllProductQueryVariables>(GetAllProductDocument, options);
+        }
+export type GetAllProductQueryHookResult = ReturnType<typeof useGetAllProductQuery>;
+export type GetAllProductLazyQueryHookResult = ReturnType<typeof useGetAllProductLazyQuery>;
+export type GetAllProductSuspenseQueryHookResult = ReturnType<typeof useGetAllProductSuspenseQuery>;
+export type GetAllProductQueryResult = Apollo.QueryResult<GetAllProductQuery, GetAllProductQueryVariables>;
+export const GetProductDocument = gql`
+    query GetProduct($id: ObjectID!) {
+  getProduct(_id: $id) {
+    item {
+      _id
+      title
+      description
+      quantity
+      images
+      createdAt
+    }
+    error {
+      field
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProductQuery__
+ *
+ * To run a query within a React component, call `useGetProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProductQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetProductQuery, GetProductQueryVariables> & ({ variables: GetProductQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+      }
+export function useGetProductLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+        }
+export function useGetProductSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetProductQuery, GetProductQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetProductQuery, GetProductQueryVariables>(GetProductDocument, options);
+        }
+export type GetProductQueryHookResult = ReturnType<typeof useGetProductQuery>;
+export type GetProductLazyQueryHookResult = ReturnType<typeof useGetProductLazyQuery>;
+export type GetProductSuspenseQueryHookResult = ReturnType<typeof useGetProductSuspenseQuery>;
+export type GetProductQueryResult = Apollo.QueryResult<GetProductQuery, GetProductQueryVariables>;
